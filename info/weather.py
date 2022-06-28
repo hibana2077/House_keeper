@@ -2,7 +2,7 @@
 Author: error: git config user.name && git config user.email & please set dead value or install git
 Date: 2022-06-28 18:40:43
 LastEditors: error: git config user.name && git config user.email & please set dead value or install git
-LastEditTime: 2022-06-28 19:42:28
+LastEditTime: 2022-06-28 22:11:06
 FilePath: \summer project\info\weather.py
 Description: weather.py
 '''
@@ -26,8 +26,14 @@ def geocoding(city,OPENWEATHER_API_KEY):
 def kelvin_to_celsius(kelvin):
     return round(kelvin - 273.15,2)
 
+def air_pollution(city,OPENWEATHER_API_KEY):
+    lat,lon = geocoding(city,OPENWEATHER_API_KEY)
+    url = 'http://api.openweathermap.org/pollution/v1/city?lat={}&lon={}&appid={}'.format(lat,lon, OPENWEATHER_API_KEY)
+    r = requests.get(url)
+    return dict(r.json())
+
 '''
-how to use:
+how to use: get temperature in city:
 北京 = 'beijing'
 print(kelvin_to_celsius(get_weather(北京,OPENWEATHER_API_KEY)['main']['temp']))
 '''
@@ -78,4 +84,37 @@ get_weather returns a dict:
   "name": "Mountain View",
   "cod": 200
   }                                         
+'''
+
+'''
+how to use: get air pollution in city:
+
+returns a dict:
+北京 = 'beijing'
+print(kelvin_to_celsius(get_weather(北京,OPENWEATHER_API_KEY)['main']['temp'])) 
+
+{
+  "coord": [ # coordinates of the city
+    50.0,
+    50.0
+  ],
+  "list": [
+    {
+      "dt": 1606147200, # time of data calculation in unix format unix time UTC
+      "main": {
+        "aqi": 4.0 # air quality index 1 for good, 2 for fair , 3 for moderate, 4 for bad, 5 for very bad
+      },
+      "components": {
+        "co": 203.609, # carbon monoxide in parts per billion
+        "no": 0.0, # nitrogen dioxide monoxide in parts per billion 
+        "no2": 0.396, # nitrogen dioxide in parts per billion
+        "o3": 75.102,  # ozone in parts per billion
+        "so2": 0.648, # sulfur dioxide in parts per billion
+        "pm2_5": 23.253, # particulate matter 2.5 in parts per billion
+        "pm10": 92.214, # particulate matter 10 in parts per billion
+        "nh3": 0.117 # Ammonia in parts per billion
+      }
+    }
+  ]
+}
 '''
